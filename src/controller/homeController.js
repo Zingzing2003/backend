@@ -1,9 +1,17 @@
-import db from '../models/index';
+import connection from "../config/database";
+import {createNewUser} from "../service/CRUDservice";
+
 export const handleHome= async (req, res)=>{
     try{
-        let data= await  db.User.findAll()
-         // model=> get dât from database 
-        return res.render("home.ejs")
+
+        try{
+            const [results, fields] = await connection.query('SELECT * FROM `Teacher`');
+            return res.render("home.ejs", {
+                data: JSON.stringify(results)
+            });
+        }catch(er){
+            console.log(er);
+        }
     }catch(e){
         console.log(e);
     }
@@ -11,4 +19,15 @@ export const handleHome= async (req, res)=>{
 }
 export const handleUser= (req, res) =>{
     return res.render("user.ejs")
+}
+
+export const handleCrud= (req, res) =>{
+    return res.render("user.ejs")
+}
+
+
+export const postCRUD= async (req, res)=>{
+    await createNewUser(req.body);
+   //console.log(req.body);
+    return res.send("crud post from server")
 }

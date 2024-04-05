@@ -1,7 +1,8 @@
 import  Express  from "express";
 import configViewEngine from "./config/viewEngine";
 import initWebRoutes from './routes/web';
-import connectDB from './config/connectDB';
+//import connectDB from './config/connectDB';// connect use sequelize
+import connection from "./config/database";
 import bodyParser from "body-parser";
 
 require("dotenv").config();
@@ -18,7 +19,11 @@ configViewEngine(app);
 
 initWebRoutes(app);
 
-connectDB(); 
+//connectDB(); 
+ 
+
+
+
 
 const PORT= process.env.PORT|| 8080;
 const hostname= 'localhost';
