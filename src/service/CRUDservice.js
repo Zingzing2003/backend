@@ -14,27 +14,58 @@ const hashUserPassword= (password)=>{
 }
 export const createNewUser= async (data)=>{
     let hashPasswordFromBcrypt= await hashUserPassword(data.password);
-    let email= data.email;
+    let Email= data.email;
     let fullName= data.fullname;
-    let StudentAge= data.age;
+    let Address= data.age;
     let StudentBirth= data.birthday;
     let ParentName= data.parentName;
-    let ParentPhone= data.phonenumber;
+    let PhoneNumber= data.phonenumber;
     let classId= data.role;
-    let id= 'ST99';
+
+
+
+    // let hashPasswordFromBcrypt= "1233";
+    // let email= "dataemail";
+    // let fullName= "datafullname";
+    // let StudentAge="0";
+    // let StudentBirth=" databirthday";
+    // let ParentName= "dataparentName";
+    // let ParentPhone= "dataphonenumber";
+    // let classId= "CL01";
+        let id= "ST099";
+        let UserId;
+        let UserName= data.userName;;
    
     try{
         const [results]= await connection.query(
-            `INSERT INTO student (StudentId, email,password,StudentName,StudentAge,StudentBirth,ParentName,ParentPhone,ClassId)
-            VALUE (?,?,?,?,?,?,?,?,?)`
-            [id,email,hashPasswordFromBcrypt,fullName,StudentAge,StudentBirth,ParentName,ParentPhone,classId],
+            `INSERT INTO users (UserName,Password)
+            VALUE (?,?)`,
+            [UserName, hashPasswordFromBcrypt],
         );
-        console.log(email,hashPasswordFromBcrypt,fullName,StudentAge, StudentBirth,ParentName,ParentPhone  ,classId);
+        UserId= results.UserId;
     }catch(err){
-        //console.log(err);
-        console.log("loi");
+        console.log(err);
+        //console.log("loi");
     }
-    
+
+    try{
+        const [results]= await connection.query(
+            `INSERT INTO student ( StudentName,StudentBirth,Address,ParentName,Email,PhoneNumber,UserId,ClassId)
+            VALUE (?,?,?,?,?,?,?,?)`,
+            [fullName,StudentBirth,Address,ParentName,Email,PhoneNumber,UserId,classId],
+        );
+        console.log();
+    }catch(err){
+        console.log(err);
+        //console.log("loi");
+    }
     //console.log(hashPasswordFromBcrypt);
     console.log(fullName);
+    // try{
+    //     const [results]= await connection.query(
+    //         `INSERT INTO course (CourseId, CourseName) VALUE (?,?)`,['c011', 'dinh']
+    //     );
+    // }catch(err){
+    //     console.log(err);
+    // }
 }
