@@ -20,7 +20,7 @@ export const createNewUser= async (data)=>{
     let StudentBirth= data.birthday;
     let ParentName= data.parentName;
     let PhoneNumber= data.phonenumber;
-    let classId= data.role;
+    let classId= 1;
 
 
 
@@ -34,12 +34,27 @@ export const createNewUser= async (data)=>{
     // let classId= "CL01";
         let id= "ST099";
         let UserId;
-        let UserName= data.userName;;
-   
+        let UserName= data.userName;
+        let username="user1";
+
+        //  const results = await connection.query("select * from users");
+        //  console.log(results);
+    try{
+        const [user]= await connection.query(
+            "SELECT * FROM users  WHERE users.UserName=?",
+                [username],
+        );
+        console.log(user.length);
+        
+    }catch(err){
+        console.log(err);
+        //console.log("loi");
+    }
+
+
     try{
         const [results]= await connection.query(
-            `INSERT INTO users (UserName,Password)
-            VALUE (?,?)`,
+            "INSERT INTO users (UserName,Password) VALUE (?,?)",
             [UserName, hashPasswordFromBcrypt],
         );
         UserId= results.UserId;
@@ -50,8 +65,7 @@ export const createNewUser= async (data)=>{
 
     try{
         const [results]= await connection.query(
-            `INSERT INTO student ( StudentName,StudentBirth,Address,ParentName,Email,PhoneNumber,UserId,ClassId)
-            VALUE (?,?,?,?,?,?,?,?)`,
+            "INSERT INTO students ( StudentName,StudentBirth,Address,ParentName,Email,PhoneNumber,UserId,ClassId) VALUE (?,?,?,?,?,?,?,?)",
             [fullName,StudentBirth,Address,ParentName,Email,PhoneNumber,UserId,classId],
         );
         console.log();
