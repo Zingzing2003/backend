@@ -14,6 +14,7 @@ const hashUserPassword= (password)=>{
 }
 export const createNewUser= async (data)=>{
     let hashPasswordFromBcrypt= await hashUserPassword(data.password);
+    let Password= data.password;
     let Email= data.email;
     let fullName= data.fullname;
     let Address= data.age;
@@ -39,25 +40,26 @@ export const createNewUser= async (data)=>{
 
         //  const results = await connection.query("select * from users");
         //  console.log(results);
-    try{
-        const [user]= await connection.query(
-            "SELECT * FROM users  WHERE users.UserName=?",
-                [username],
-        );
-        console.log(user.length);
+    // try{
+    //     const [user]= await connection.query(
+    //         "SELECT * FROM users  WHERE users.UserName=?",
+    //             [username],
+    //     );
+    //     console.log(user.length);
         
-    }catch(err){
-        console.log(err);
-        //console.log("loi");
-    }
+    // }catch(err){
+    //     console.log(err);
+    //     //console.log("loi");
+    // }
 
 
     try{
         const [results]= await connection.query(
             "INSERT INTO users (UserName,Password) VALUE (?,?)",
-            [UserName, hashPasswordFromBcrypt],
+            [UserName, Password],
         );
-        UserId= results.UserId;
+         UserId= results.insertId;
+       // console.log(results.insertId);
     }catch(err){
         console.log(err);
         //console.log("loi");

@@ -3,14 +3,9 @@ import connection from '../config/database';
 let handleUserLogin = (username, password) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let userData = {}
-            let isExist = await checkUserEmail(username)
+            let userData = {};
+            let isExist = await checkUserName(username);
             if (isExist) {
-                // let user = await db.User.findOne({
-                //     attributes: ['id', 'email', 'password', 'roleID', 'firstName', 'lastName'],
-                //     where: { email: email },
-                //     raw: true
-                // })
                 const [user]= await connection.query(
                     "SELECT * FROM users  WHERE users.UserName=?",
                     [username],
@@ -32,7 +27,7 @@ let handleUserLogin = (username, password) => {
                 }
             } else {
                 userData.errCode = 1
-                userData.message = "Your email isn't exist in system. Plz try other one."
+                userData.message = "Your UserName isn't exist in system. Plz try other one."
             }
             resolve(userData)
         } catch (e) {
@@ -41,12 +36,9 @@ let handleUserLogin = (username, password) => {
     })
 }
 
-let checkUserEmail = (username) => {
+let checkUserName = (username) => {
     return new Promise(async (resolve, reject) => {
         try {
-            // let user = await db.User.findOne({
-            //     where: { email: userEmail }
-            // })
             const [user]= await connection.query(
                 "SELECT * FROM users  WHERE users.UserName=?",
                 [username],
@@ -90,41 +82,6 @@ let getAllUsers = (userId) => {
     })
 }
 
-let createNewUser = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let check = await checkUserEmail(data.email)
-            if (check) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Your email is already in used. Plz try another email!'
-                })
-            }
-            else {
-                console.log('check data nodejs: ', data)
-                await db.User.create({
-                    email: data.email,
-                    password: data.password,
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    address: data.address,
-                    phoneNumber: data.phoneNumber,
-                    roleId: data.roleId,
-                    gender: data.gender,
-                    positionId: data.positionId,
-                    image: data.avatar
-                })
-            }
-
-            resolve({
-                errCode: 0,
-                message: 'OK'
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
 
 let deleteUser = (userId) => {
     return new Promise(async (resolve, reject) => {
@@ -198,30 +155,57 @@ let editUser = (data) => {
     })
 }
 
-let getALLCodeServices = (typeInput) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!typeInput) {
-                resolve({
-                    errCode: 1,
-                    errMesage: `Missing required prameter!`
-                })
-            } else {
-                let res = {}
-                let allcode = await db.Allcode.findAll({
-                    where: { type: typeInput }
-                })
-                res.errCode = 0
-                res.data = allcode
-                resolve(res)
-            }
-        } catch (e) {
-            reject(e)
+
+let getUserByStudent=(userId)=>{
+    return new Promise(async(resolve, reject )=>{
+        try{
+            let [user]= await  connection.query(
+                "SELECT * FROM users WHERE UserId=?",[userId]
+            );
+            resolve(user[0]);
+
+        }catch(e)
+        {
+            reject(e);
         }
     })
 }
 
+
+let getUserByTeacher=(userId)=>{
+    return new Promise(async(resolve, reject )=>{
+        try{
+            let [user]= await  connection.query(
+                "SELECT * FROM users WHERE UserId=?",[userId]
+            );
+            resolve(user[0]);
+
+        }catch(e)
+        {
+            reject(e);
+        }
+    })
+}
+let getUserByStaff=(userId)=>{
+    return new Promise(async(resolve, reject )=>{
+        try{
+            let [user]= await  connection.query(
+                "SELECT * FROM users WHERE UserId=?",[userId]
+            );
+            resolve(user[0]);
+
+        }catch(e)
+        {
+            reject(e);
+        }
+    })
+}
+
+
 module.exports = {
-    getAllUsers, createNewUser, handleUserLogin,
-    deleteUser, editUser, getALLCodeServices, 
+    getUserByStaff,
+    getUserByTeacher,
+    getAllUsers,  handleUserLogin,
+    deleteUser, editUser,  
+    getUserByStudent
 }
